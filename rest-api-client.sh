@@ -3,15 +3,17 @@
 #
 # REST API CLIENT USING CURL
 #
-# requires
+# REQUIREMENTS
+# - Bash (Linux or MS Windows i.e with Cygwin)
 # - curl
-# - config file with endpoint, api user, password
+# - sha1sum (optional; for export functionality with AUTOFILE only)
 # ----------------------------------------------------------------------
 # (1) source this script
-# (2) enter "http.showhelp" to get a list ov available commands
+# (2) enter "http.help" to get a list of available commands
 # ----------------------------------------------------------------------
 # 2020-02-07  v0.2  axel.hahn@iml.unibe.ch  BETABETA
 # 2020-02-12  v0.4  axel.hahn@iml.unibe.ch  Caching
+# 2020-03-02  v0.5  axel.hahn@iml.unibe.ch  a few more response check functions
 # ======================================================================
 
 # --- fetch incoming params
@@ -20,12 +22,12 @@
   ApiUrl=$3
   Body="$4"
 
-
-  http_cfg__about="Bash REST API client v0.4"
+  http_cfg__about="Bash REST API client v0.5"
   typeset -i http_cfg__debug=0
   typeset -i http_cfg__cacheTtl=0
   http_cfg__cacheDir=/var/tmp/http-cache
   http_cfg__UA="${http_cfg__about}"
+  http_cfg__prjurl="https://git-repo.iml.unibe.ch/iml-open-source/bash-rest-api-client"
 
 # --- curl meta infos to collect
 #     see variables in man curl --write-out param
@@ -224,6 +226,7 @@ EOH
   }
 
 
+  # load a config file
   function http.loadcfg(){
     http._wd "${FUNCNAME[0]}($1) !!! DEPRECATED !!!"
     # reset expected vars from config
@@ -344,6 +347,14 @@ EOH
     echo "${http_resp__all}"
   }
 
+  # get Http status as string OK|Redirect|Error
+  function http.getStatus(){
+    http._wd "${FUNCNAME[0]}($1)"
+    http.isOk       >/dev/null && echo OK
+    http.isRedirect >/dev/null && echo Redirect
+    http.isError    >/dev/null && echo Error
+  }
+
   # get Http status code of the request as 3 digit number
   function http.getStatuscode(){
     http._wd "${FUNCNAME[0]}($1)"
@@ -356,14 +367,30 @@ EOH
   # Additionally you can verify the return code
   # $? -eq 0 means YES
   # $? -ne 0 means NO
-  function http.isok(){
+  function http.isOk(){
     http._wd "${FUNCNAME[0]}($1)"
     http.getStatuscode | grep '2[0-9][0-9]'
   }
   # was the repsonse a redirect?
-  function http.isredirect(){
+  function http.isRedirect(){
     http._wd "${FUNCNAME[0]}($1)"
     http.getStatuscode | grep '3[0-9][0-9]'
+  }
+
+  # was the repsonse a client error (4xx or 5xx)
+  function http.isError(){
+    http._wd "${FUNCNAME[0]}($1)"
+    http.getStatuscode | grep '[45][0-9][0-9]'
+  }
+  # was the repsonse a client error (4xx)
+  function http.isClientError(){
+    http._wd "${FUNCNAME[0]}($1)"
+    http.getStatuscode | grep '4[0-9][0-9]'
+  }
+  # was the repsonse a client error (5xx)
+  function http.isServerError(){
+    http._wd "${FUNCNAME[0]}($1)"
+    http.getStatuscode | grep '5[0-9][0-9]'
   }
 
 
@@ -531,6 +558,14 @@ EOH
   function http.help(){
     cat <<EOH
 
+$http_cfg__about
+
+This is a bash solution to script REST API calls.
+
+Source:$http_cfg__prjurl
+License: GNU GPL 3
+
+
 INSTRUCTION:
 
 - Source the file once
@@ -543,7 +578,6 @@ INSTRUCTION:
     http.setDebug 0|1
       Enable or disable debugging infos during processing. It is written
       to STDERR.
-
 
 - initialize a request
 
@@ -610,14 +644,25 @@ INSTRUCTION:
       http.getResponseHeader
         Get The http reponse header
 
+- check http status code
+
       http.getStatuscode
         Get the http status code of a request
 
-      http.isok
+      http.isOk
         Check if the http response code is a 2xx
 
-      http.isredirect
-        Check if the http response code is a 333xx
+      http.isRedirect
+        Check if the http response code is a 3xx
+
+      http.isError
+        Check if the http response code is a 4xx or 5xx
+
+      http.isClientError
+        Check if the http response code is a 4xx
+
+      http.isServerError
+        Check if the http response code is a 5xx
 
       http.getRequestAge
         Get the age of the request in seconds.
@@ -662,15 +707,5 @@ EOH
 # ----------------------------------------------------------------------
 
   http.init
-
-  if [ $# -ge 3 ]; then
-
-    http.loadCfg "${1}"
-    http.setMethod "${2}"
-    http.setUrl "${3}"
-    http.setBody "${4}"
-    http.makeRequest
-
-  fi
 
 # ----------------------------------------------------------------------

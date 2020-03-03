@@ -6,7 +6,13 @@ The specialties of this component are
 * It was build to simplify http calls and use it in scripts
 * After making a request the response stays is in memory. There is no output to any file to grep something or to cleanup after usage.
 * Its functions feel a bit like class methods, i.e. http.getResponse to get tehe response body or http.getResponseHeader for the Http response header
-* The response an be stored ... and reimportant later. After import you can use the http.get* functions to fetch results from thew former request.
+* The response can be stored ... and reimported later. After import you can use the http.get* functions to fetch results from the former request.
+* This component wraps curl - ist supports any http method
+* works with anonymous requests and Basic Authentication
+
+
+Source: https://git-repo.iml.unibe.ch/iml-open-source/bash-rest-api-client
+License: GNU GPL 3
 
 
 ## Requirements ##
@@ -119,14 +125,25 @@ INSTRUCTION:
       http.getResponseHeader
         Get The http reponse header
 
+- check http status code
+
       http.getStatuscode
         Get the http status code of a request
 
-      http.isok
+      http.isOk
         Check if the http response code is a 2xx
 
-      http.isredirect
-        Check if the http response code is a 333xx
+      http.isRedirect
+        Check if the http response code is a 3xx
+
+      http.isError
+        Check if the http response code is a 4xx or 5xx
+
+      http.isClientError
+        Check if the http response code is a 4xx
+
+      http.isServerError
+        Check if the http response code is a 5xx
 
       http.getRequestAge
         Get the age of the request in seconds.
@@ -135,7 +152,6 @@ INSTRUCTION:
 
       http.getRequestTs
         Get the Unix timestamp of the request
-
 
 - import/ export
 
