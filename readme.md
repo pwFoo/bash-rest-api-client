@@ -6,7 +6,7 @@ The specialties of this component are
 
 * It was build to simplify http calls and handle http response for scripts
 * After making a request the response stays is in memory. There is no output to any file to grep something or to cleanup after usage.
-* Its functions feel a bit like class methods, i.e. http.getResponse to get tehe response body or http.getResponseHeader for the Http response header
+* Its functions feel a bit like class methods, i.e. http.getResponse to get the response body or http.getResponseHeader for the Http response header
 * This component wraps curl - ist supports any http method
 * works with anonymous requests and Basic Authentication
 * The response can be stored ... and reimported later. After import you can use the http.get* functions to fetch results from the former request.
