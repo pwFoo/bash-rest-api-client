@@ -4,12 +4,13 @@ This is a bash solution to script REST API calls.
 
 The specialties of this component are
 
-* It was build to simplify http calls and use it in scripts
+* It was build to simplify http calls and handle http response for scripts
 * After making a request the response stays is in memory. There is no output to any file to grep something or to cleanup after usage.
 * Its functions feel a bit like class methods, i.e. http.getResponse to get tehe response body or http.getResponseHeader for the Http response header
-* The response can be stored ... and reimported later. After import you can use the http.get* functions to fetch results from the former request.
 * This component wraps curl - ist supports any http method
 * works with anonymous requests and Basic Authentication
+* The response can be stored ... and reimported later. After import you can use the http.get* functions to fetch results from the former request.
+* Caching support for GET requests with a given TTL
 
 
 Source: https://git-repo.iml.unibe.ch/iml-open-source/bash-rest-api-client
@@ -25,6 +26,18 @@ License: GNU GPL 3
 
 
 ## Installation ##
+
+**Download** the archive i.e. as zip:
+
+https://git-repo.iml.unibe.ch/iml-open-source/bash-rest-api-client/-/archive/master/bash-rest-api-client-master.zip
+
+(see other formats at the download button on https://git-repo.iml.unibe.ch/iml-open-source/bash-rest-api-client)
+
+or **Git clone**
+
+```
+$ git clone https://git-repo.iml.unibe.ch/iml-open-source/bash-rest-api-client.git
+```
 
 Copy the *rest-api-client.sh* anywhere you want.
 
