@@ -646,8 +646,11 @@ INSTRUCTION:
 
 - check http status code
 
+      http.getStatus
+        Get the http status as string Ok|Redirect|Error
+
       http.getStatuscode
-        Get the http status code of a request
+        Get the http status code of a request as integer
 
       http.isOk
         Check if the http response code is a 2xx

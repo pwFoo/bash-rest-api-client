@@ -1,6 +1,7 @@
 # REST API CLIENT #
 
 This is a bash solution to script REST API calls.
+
 The specialties of this component are
 
 * It was build to simplify http calls and use it in scripts
@@ -12,6 +13,7 @@ The specialties of this component are
 
 
 Source: https://git-repo.iml.unibe.ch/iml-open-source/bash-rest-api-client
+
 License: GNU GPL 3
 
 
@@ -127,8 +129,11 @@ INSTRUCTION:
 
 - check http status code
 
+      http.getStatus
+        Get the http status as string Ok|Redirect|Error
+
       http.getStatuscode
-        Get the http status code of a request
+        Get the http status code of a request as integer
 
       http.isOk
         Check if the http response code is a 2xx
