@@ -239,7 +239,7 @@ EOH
     . "${1}" || http.quit
 
     # set "internal" vars
-    if [-z "$RestApiPassword" ]; then
+    if [ -z "$RestApiPassword" ]; then
       http.setAuth "$RestApiUser:$RestApiPassword"
     else
       http.setAuth
